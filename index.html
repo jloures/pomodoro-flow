@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pomodoro Flow</title>
+  <meta name="description" content="A minimal, customizable Pomodoro timer with ambient sounds.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="mode-work">
+
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="logo">Pomodoro <span>Flow</span></div>
+      <button class="btn-icon" id="btn-settings" aria-label="Settings">&#9881;</button>
+    </div>
+
+    <!-- Mode Selector -->
+    <div class="mode-selector">
+      <button class="mode-btn active" data-mode="work">Focus</button>
+      <button class="mode-btn" data-mode="shortBreak">Short Break</button>
+      <button class="mode-btn" data-mode="longBreak">Long Break</button>
+    </div>
+
+    <!-- Timer -->
+    <div class="timer-wrapper">
+      <svg class="timer-svg" viewBox="0 0 300 300">
+        <circle class="ring-bg" cx="150" cy="150" r="140"/>
+        <circle class="ring-progress" id="progress-ring" cx="150" cy="150" r="140"
+                stroke-dasharray="879.65" stroke-dashoffset="0"/>
+      </svg>
+      <div class="timer-content">
+        <div id="time-display">25:00</div>
+        <div id="mode-label">Focus</div>
+        <div id="session-count">Session 1</div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <button class="btn-control" id="btn-reset" aria-label="Reset">&#8634;</button>
+      <button class="btn-control primary" id="btn-start" aria-label="Start">&#9654;</button>
+      <button class="btn-control" id="btn-skip" aria-label="Skip">&#9197;</button>
+    </div>
+
+    <!-- Shortcuts -->
+    <div class="shortcuts">
+      <kbd>Space</kbd> start/pause &nbsp; <kbd>R</kbd> reset &nbsp; <kbd>S</kbd> skip
+    </div>
+  </div>
+
+  <!-- Settings Overlay -->
+  <div class="settings-overlay" id="settings-overlay"></div>
+
+  <!-- Settings Panel -->
+  <div class="settings-panel" id="settings-panel">
+    <div class="settings-header">
+      <h2>Settings</h2>
+      <button class="btn-icon" id="btn-close-settings" aria-label="Close settings">&#10005;</button>
+    </div>
+
+    <div class="setting-group">
+      <label for="input-work">Focus Duration (min)</label>
+      <input type="number" id="input-work" min="1" max="120" value="25">
+    </div>
+
+    <div class="setting-group">
+      <label for="input-short">Short Break (min)</label>
+      <input type="number" id="input-short" min="1" max="60" value="5">
+    </div>
+
+    <div class="setting-group">
+      <label for="input-long">Long Break (min)</label>
+      <input type="number" id="input-long" min="1" max="60" value="15">
+    </div>
+
+    <div class="setting-group">
+      <label for="input-sessions">Sessions Before Long Break</label>
+      <input type="number" id="input-sessions" min="2" max="10" value="4">
+    </div>
+
+    <div class="setting-group">
+      <label for="select-sound">Ambient Sound</label>
+      <select id="select-sound">
+        <option value="">None</option>
+      </select>
+    </div>
+
+    <div class="setting-group">
+      <label>Volume</label>
+      <div class="volume-row">
+        <input type="range" id="input-volume" min="0" max="1" step="0.01" value="0.5">
+        <span id="volume-value">50%</span>
+      </div>
+    </div>
+
+    <div class="setting-group">
+      <div class="checkbox-row">
+        <input type="checkbox" id="check-auto-start" checked>
+        <span>Auto-start next session</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/sounds.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
