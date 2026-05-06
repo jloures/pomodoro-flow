@@ -21,7 +21,9 @@ const App = (() => {
     running: false,
     session: 1,
     intervalId: null,
+    endAt: 0,               // ms timestamp when current run ends (drift-free)
   };
+  let previewTimeoutId = null;
 
   // DOM refs
   const $ = id => document.getElementById(id);
@@ -53,7 +55,10 @@ const App = (() => {
   // --- Timer ---
 
   function tick() {
-    if (state.timeLeft <= 0) {
+    const remaining = Math.round((state.endAt - Date.now()) / 1000);
+    if (remaining <= 0) {
+      state.timeLeft = 0;
+      render();
       clearInterval(state.intervalId);
       state.running = false;
       SoundEngine.chime();
@@ -61,20 +66,25 @@ const App = (() => {
       nextMode();
       return;
     }
-    state.timeLeft--;
+    state.timeLeft = remaining;
     render();
   }
 
   function start() {
     if (state.running) return;
     SoundEngine.getCtx(); // unlock audio
+    requestNotifications(); // ask on first user gesture
     state.running = true;
-    state.intervalId = setInterval(tick, 1000);
+    state.endAt = Date.now() + state.timeLeft * 1000;
+    state.intervalId = setInterval(tick, 250);
     if (settings.sound) SoundEngine.play(settings.sound);
     render();
   }
 
   function pause() {
+    if (state.running) {
+      state.timeLeft = Math.max(0, Math.round((state.endAt - Date.now()) / 1000));
+    }
     clearInterval(state.intervalId);
     state.running = false;
     SoundEngine.stopAll();
@@ -278,7 +288,7 @@ const App = (() => {
     });
 
     // Settings inputs — live update
-    [els.inputWork, els.inputShort, els.inputLong, els.inputSessions, els.selectSound, els.checkAutoStart].forEach(el => {
+    [els.inputWork, els.inputShort, els.inputLong, els.inputSessions, els.checkAutoStart].forEach(el => {
       el.addEventListener('change', applySettingsFromUI);
     });
 
@@ -289,12 +299,20 @@ const App = (() => {
       saveSettings();
     });
 
-    // Sound preview on change
+    // Sound change — live swap if running, short preview otherwise
     els.selectSound.addEventListener('change', () => {
       applySettingsFromUI();
-      if (settings.sound && !state.running) {
+      if (previewTimeoutId) { clearTimeout(previewTimeoutId); previewTimeoutId = null; }
+      if (state.running) {
+        SoundEngine.play(settings.sound); // empty key → stopAll only
+      } else if (settings.sound) {
         SoundEngine.play(settings.sound);
-        setTimeout(() => { if (!state.running) SoundEngine.stopAll(); }, 2000);
+        previewTimeoutId = setTimeout(() => {
+          previewTimeoutId = null;
+          if (!state.running) SoundEngine.stopAll();
+        }, 2000);
+      } else {
+        SoundEngine.stopAll();
       }
     });
 
@@ -317,7 +335,6 @@ const App = (() => {
     populateSettingsUI();
     bindEvents();
     render();
-    requestNotifications();
   }
 
   document.addEventListener('DOMContentLoaded', init);
