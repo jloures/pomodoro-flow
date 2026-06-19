@@ -102,6 +102,13 @@ body.mode-longBreak { --current-accent: var(--long-accent); --current-glow: var(
 
 .mode-btn:hover { color: var(--text); }
 
+.mode-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.mode-btn:disabled:hover { color: var(--text-muted); }
+
 .mode-btn.active {
   background: var(--current-accent, var(--accent));
   color: #fff;
@@ -301,6 +308,87 @@ body.mode-longBreak { --current-accent: var(--long-accent); --current-glow: var(
 .setting-group select option {
   background: var(--bg-surface);
   color: var(--text);
+}
+
+/* Cycle builder */
+
+.phase-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.phase-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.phase-row select,
+.phase-row input[type="number"] {
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 0.9rem;
+  outline: none;
+  transition: border var(--transition);
+}
+
+.phase-row select:focus,
+.phase-row input[type="number"]:focus {
+  border-color: var(--current-accent, var(--accent));
+}
+
+.phase-row .phase-type { flex: 1; }
+.phase-row .phase-min { width: 64px; }
+.phase-row .phase-unit { font-size: 0.8rem; color: var(--text-muted); }
+
+.phase-row .phase-del {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 6px 8px;
+  border-radius: 6px;
+  transition: all var(--transition);
+}
+
+.phase-row .phase-del:hover:not(:disabled) {
+  color: var(--accent);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.phase-row .phase-del:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.btn-add-phase {
+  width: 100%;
+  padding: 9px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all var(--transition);
+}
+
+.btn-add-phase:hover {
+  color: var(--text);
+  border-color: var(--current-accent, var(--accent));
+}
+
+.setting-hint {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  opacity: 0.7;
+  margin-top: 8px;
+  line-height: 1.4;
+  text-transform: none;
+  letter-spacing: 0;
 }
 
 /* Volume slider */

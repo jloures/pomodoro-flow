@@ -62,23 +62,15 @@
     </div>
 
     <div class="setting-group">
-      <label for="input-work">Focus Duration (min)</label>
-      <input type="number" id="input-work" min="1" max="120" value="25">
+      <label for="select-preset">Cycle Preset</label>
+      <select id="select-preset"></select>
     </div>
 
     <div class="setting-group">
-      <label for="input-short">Short Break (min)</label>
-      <input type="number" id="input-short" min="1" max="60" value="5">
-    </div>
-
-    <div class="setting-group">
-      <label for="input-long">Long Break (min)</label>
-      <input type="number" id="input-long" min="1" max="60" value="15">
-    </div>
-
-    <div class="setting-group">
-      <label for="input-sessions">Sessions Before Long Break</label>
-      <input type="number" id="input-sessions" min="2" max="10" value="4">
+      <label>Cycle Phases</label>
+      <div class="phase-list" id="phase-list"></div>
+      <button class="btn-add-phase" id="btn-add-phase">+ Add phase</button>
+      <p class="setting-hint">Phases run top to bottom, then loop. For 100% focus, keep a single Focus phase with no breaks.</p>
     </div>
 
     <div class="setting-group">

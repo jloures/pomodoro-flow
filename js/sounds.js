@@ -5,21 +5,24 @@ const SoundEngine = (() => {
   let ctx = null;
   let masterGain = null;
   let activeNodes = [];
+  let pendingVolume = 0.5; // applied when ctx is created on first gesture
 
   function getCtx() {
     if (!ctx) {
       ctx = new (window.AudioContext || window.webkitAudioContext)();
       masterGain = ctx.createGain();
-      masterGain.gain.value = 0.5;
+      masterGain.gain.value = pendingVolume;
       masterGain.connect(ctx.destination);
     }
     if (ctx.state === 'suspended') ctx.resume();
     return ctx;
   }
 
+  // Safe to call before any user gesture — only stores the value until
+  // the AudioContext actually exists (avoids creating a suspended ctx at load).
   function setVolume(v) {
-    getCtx();
-    masterGain.gain.setTargetAtTime(v, ctx.currentTime, 0.02);
+    pendingVolume = v;
+    if (ctx) masterGain.gain.setTargetAtTime(v, ctx.currentTime, 0.02);
   }
 
   function stopAll() {
